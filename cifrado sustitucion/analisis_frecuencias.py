@@ -3,7 +3,7 @@ import cifrado_sustitucion as cifrado
 
 instancia = cifrado.CifradoSustitucion("cifrado sustitucion/text.txt")
 instancia.cifrar()
-instancia.decifrar()
+# instancia.decifrar()
 
 letras = list(instancia.frecuencias.keys())
 frecuencia = list(instancia.frecuencias.values())
