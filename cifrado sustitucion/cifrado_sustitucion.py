@@ -7,7 +7,7 @@ import constantes as con
 
 class CifradoSustitucion:
     def __init__(self, ruta):
-        archivo = open(ruta)
+        archivo = open(ruta,encoding="utf-8")
         data = archivo.readlines()
         archivo.close()
 
@@ -43,17 +43,12 @@ class CifradoSustitucion:
             print("El texto ya está cifrado...")
 
     def decifrar(self):
-        frecuencias = Counter(letra for letra in self.texto if letra != " ")
+        self.frecuencias = Counter(letra for letra in self.texto if letra != " " and letra != "." and letra != ",")
         largo = len(self.texto.replace(" ", ""))
 
 if __name__ == "__main__":
-    instancia = CifradoSustitucion("text.txt")
+    instancia = CifradoSustitucion("cifrado sustitucion/text.txt")
 
     print(instancia.texto)
     instancia.cifrar()
     instancia.decifrar()
-
-        
-        
-
-
