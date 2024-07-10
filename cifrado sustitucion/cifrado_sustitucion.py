@@ -1,7 +1,7 @@
 """
 Archivo encargado de crear el cifrado 
 """
-from collections import Counter, defaultdict
+from collections import Counter
 import random 
 import constantes as con 
 
@@ -43,13 +43,13 @@ class CifradoSustitucion:
             print("El texto ya está cifrado...")
 
     def informacion(self):
-        frecuencias = dict(Counter(letra for letra in self.texto if letra != " " and letra != "." and letra != ","))
+        frecuencias = dict(Counter(letra for letra in self.texto if letra in con.abecedario))
         largo = len(self.texto.replace(" ", ""))
-        suma = 0
         for letra in con.abecedario:
-            frecuencias[letra] = frecuencias[letra] / largo
-            suma += frecuencias[letra]
-        
+            if letra in list(frecuencias.keys()):
+                frecuencias[letra] = frecuencias[letra] / largo
+            else:
+                frecuencias[letra] = 0
         self.frecuencias = frecuencias
         return frecuencias
     
