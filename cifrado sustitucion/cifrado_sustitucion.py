@@ -43,8 +43,15 @@ class CifradoSustitucion:
             print("El texto ya está cifrado...")
 
     def informacion(self):
-        self.frecuencias = Counter(letra for letra in self.texto if letra != " " and letra != "." and letra != ",")
+        frecuencias = dict(Counter(letra for letra in self.texto if letra != " " and letra != "." and letra != ","))
         largo = len(self.texto.replace(" ", ""))
+        print("Aqui van las frecuencias...")
+        for letra in con.abecedario:
+            frecuencias[letra] = frecuencias[letra] / largo
+            print(frecuencias[letra])
+        
+        return frecuencias
+    
 
     def decifrar(self, abecedario):
         decifrado = ""
