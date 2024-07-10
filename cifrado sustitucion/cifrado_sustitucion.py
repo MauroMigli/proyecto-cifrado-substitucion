@@ -44,7 +44,10 @@ class CifradoSustitucion:
 
     def informacion(self):
         frecuencias = dict(Counter(letra for letra in self.texto if letra in con.abecedario))
-        largo = len(self.texto.replace(" ", ""))
+        largo = 0
+        for i in self.texto:
+            if i in con.abecedario:
+                largo += 1
         for letra in con.abecedario:
             if letra in list(frecuencias.keys()):
                 frecuencias[letra] = frecuencias[letra] / largo
