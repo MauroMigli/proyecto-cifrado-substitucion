@@ -6,7 +6,7 @@ def orden(valor):
     return valor[1]
 
 
-instancia = cifrado.CifradoSustitucion("text.txt")
+instancia = cifrado.CifradoSustitucion("cifrado sustitucion/text.txt")
 instancia.cifrar()
 # instancia.decifrar()
 instancia.informacion()
@@ -50,7 +50,8 @@ for tupla in comprimido:
 print(abecedario_nuevo)
 
 instancia.decifrar("".join(abecedario_nuevo))
-
+# lista de todos los posibles bigramas
+bigramas = [x+y for x in "abcdefghijklmnopqrstuvwxyz" for y in "abcdefghijklmnopqrstuvwxyz"]
 
 
 
