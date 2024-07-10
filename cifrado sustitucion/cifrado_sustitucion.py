@@ -42,9 +42,24 @@ class CifradoSustitucion:
         else:
             print("El texto ya está cifrado...")
 
-    def decifrar(self):
+    def informacion(self):
         self.frecuencias = Counter(letra for letra in self.texto if letra != " " and letra != "." and letra != ",")
         largo = len(self.texto.replace(" ", ""))
+
+    def decifrar(self, abecedario):
+        decifrado = ""
+        for letra in self.texto:
+            if letra in con.abecedario:
+                contador = 0
+                for i in range(len(abecedario)):
+                    if abecedario[i] == letra:
+                        contador = i
+                decifrado += con.abecedario[contador]
+            else:
+                decifrado += letra
+
+        self.texto = decifrado
+        print("texto nuevo:", self.texto)
 
 if __name__ == "__main__":
     instancia = CifradoSustitucion("cifrado sustitucion/text.txt")
