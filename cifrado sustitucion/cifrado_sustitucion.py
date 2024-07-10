@@ -72,8 +72,8 @@ class CifradoSustitucion:
         print("texto nuevo:", self.texto)
 
 if __name__ == "__main__":
-    instancia = CifradoSustitucion("cifrado sustitucion/text.txt")
+    instancia = CifradoSustitucion("text.txt")
 
     print(instancia.texto)
     instancia.cifrar()
-    instancia.decifrar()
+    instancia.informacion()
