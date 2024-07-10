@@ -1,7 +1,7 @@
 """
 Archivo encargado de crear el cifrado 
 """
-from collections import Counter
+from collections import Counter, defaultdict
 import random 
 import constantes as con 
 
@@ -21,7 +21,7 @@ class CifradoSustitucion:
             data[i] = data[i].replace("ú", "u")
 
         self.esta_cifrado = False
-        
+        self.texto_secreto = "".join(data)
         self.texto = "".join(data)
 
     def cifrar(self):
@@ -45,14 +45,12 @@ class CifradoSustitucion:
     def informacion(self):
         frecuencias = dict(Counter(letra for letra in self.texto if letra != " " and letra != "." and letra != ","))
         largo = len(self.texto.replace(" ", ""))
-        print("Aqui van las frecuencias...")
         suma = 0
         for letra in con.abecedario:
             frecuencias[letra] = frecuencias[letra] / largo
-            print(frecuencias[letra])
             suma += frecuencias[letra]
-        print(suma)
         
+        self.frecuencias = frecuencias
         return frecuencias
     
 
@@ -68,8 +66,22 @@ class CifradoSustitucion:
             else:
                 decifrado += letra
 
-        self.texto = decifrado
         print("texto nuevo:", self.texto)
+
+        contador_fallas = 0
+        set_fallas = set()
+        texto_final = ""
+        for i in range(len(self.texto)):
+            if self.texto_secreto[i] == decifrado[i]:
+                texto_final += decifrado[i]
+            else:
+                if self.texto_secreto[i] not in set_fallas:
+                    set_fallas.add(self.texto_secreto[i])
+                    contador_fallas += 1
+                    print("La letra", self.texto_secreto[i], "falla")
+                texto_final += "_"
+        print(texto_final)
+        print("cantidad de errores", contador_fallas)
 
 if __name__ == "__main__":
     instancia = CifradoSustitucion("text.txt")
