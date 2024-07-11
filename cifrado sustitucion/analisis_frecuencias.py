@@ -30,15 +30,21 @@ instancia.informacion()
 # # Display the plot
 # plt.show()
 
+# Abecedario a generar 
 abecedario_nuevo = ["" for _ in range(26)]
 
+# Lista del abecedario
 abecedario = [x for x in "abcdefghijklmnopqrstuvwxyz"]
-frecuencias_texto = [x[0] for x in sorted(list(instancia.informacion().items()), key = orden)]
+# Frecuencias del texto cifrado ordenadas de menor a mayor 
+frecuencias_texto = [x[0] for x in sorted(list(instancia.informacion()[0].items()), key = orden)]
+# Frecuencias de una sola letra ordenadas de menor a mayor 
 frecuencias_normal = [x[0] for x in sorted(list(con.frecuenciasIngles.items()), key = orden)]
 
+# Se entrega los pares correspondientes de letra cifrada y letra normal
 comprimido = list(zip(frecuencias_normal, frecuencias_texto))
 print(comprimido)
 
+# Por cada tupla se empieza a generar el nuevo abecedario en la variable abecedario_nuevo
 for tupla in comprimido:
     posicion = 0
     for i in range(len(con.abecedario)):
@@ -49,6 +55,7 @@ for tupla in comprimido:
 
 print(abecedario_nuevo)
 
+# Se decifra
 instancia.decifrar("".join(abecedario_nuevo))
 # lista de todos los posibles bigramas y frecuencias
 alfabeto = 'abcdefghijklmnopqrstuvwxyz'
@@ -58,6 +65,7 @@ for primera_letra in alfabeto:
         letra = primera_letra + segunda_letra
         bigrama[letra] = 0 
 
+# Se revisa los bigramas posibles dentro del texto 
 textocifrado =  instancia.texto
 cantidaddebigramas = 0
 for i in range(len(textocifrado)-1):
@@ -78,7 +86,7 @@ for primera_letra in alfabeto:
             letra = primera_letra + segunda_letra + tercera_letra
             trigrama[letra] = 0 
 
-
+# Se revisa los trigramas posibles dentro del texto cifrado
 cantidaddetrigrama = 0
 
 for i in range(len(textocifrado)-2):

@@ -6,7 +6,11 @@ import random
 import constantes as con 
 
 class CifradoSustitucion:
+    """
+    Clase encargada de poder cifrar, entregar información y decifrar el texto
+    """
     def __init__(self, ruta):
+        # Se lee el archivo...
         archivo = open(ruta,encoding="utf-8")
         data = archivo.readlines()
         archivo.close()
@@ -20,22 +24,37 @@ class CifradoSustitucion:
             data[i] = data[i].replace("ó", "o")
             data[i] = data[i].replace("ú", "u")
 
+        # Si es que esta cifrado, entonces pasa a ser True 
         self.esta_cifrado = False
+        # Contenido real del texto
         self.texto_secreto = "".join(data)
+        # Contenido a cifrar del texto 
         self.texto = "".join(data)
 
     def cifrar(self):
+        """
+        Metodo encargado del cifrado del texto 
+        """
+        # Si es que no está cifrado...
         if not self.esta_cifrado:
+            # En cifrado se guardará el texto a cifrar 
             cifrado = ""
+            # Indices del abecedario nuevo
             indices = con.indices
             random.shuffle(indices)
 
+            # Por cada caracter del texto a cifrar 
             for letra in self.texto:
+                # Si es que pertenece al abecedario...
                 if letra in con.abecedario:
+                    # Se le asigna su transformación al nuevo abecedario
                     cifrado += con.abecedario[indices[con.indices_abecedario[letra]]]
+                # En el caso contrario
                 else:
+                    # Se asigna el caracter tal cual
                     cifrado += letra
 
+            # Se cambia el atributo self.texto y se levanta la flag para indicar que se encuentra cifrado
             self.texto = cifrado
             self.esta_cifrado = True
             print("Texto cifrado!:", self.texto)
@@ -43,6 +62,7 @@ class CifradoSustitucion:
             print("El texto ya está cifrado...")
 
     def informacion(self):
+        # Frecuencias de una sola letra 
         frecuencias = dict(Counter(letra for letra in self.texto if letra in con.abecedario))
         largo = 0
         for i in self.texto:
@@ -84,6 +104,7 @@ class CifradoSustitucion:
     
 
     def decifrar(self, abecedario):
+        # Se decifra el codigo dado el abecedario
         decifrado = ""
         for letra in self.texto:
             if letra in con.abecedario:
@@ -97,6 +118,7 @@ class CifradoSustitucion:
 
         print("texto nuevo:", self.texto)
 
+        # Se revisan las fallas del abecedario con respecto al texto original
         contador_fallas = 0
         set_fallas = set()
         texto_final = ""
