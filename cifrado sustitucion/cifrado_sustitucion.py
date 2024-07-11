@@ -42,6 +42,8 @@ class CifradoSustitucion:
             # Indices del abecedario nuevo
             indices = con.indices
             random.shuffle(indices)
+            # Se genera el abecedario nuevo 
+            self.abecedario_cifrado = {con.abecedario[i]: con.abecedario[indices[i]] for i in range(len(con.abecedario))}
 
             # Por cada caracter del texto a cifrar 
             for letra in self.texto:
