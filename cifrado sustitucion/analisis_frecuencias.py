@@ -42,7 +42,21 @@ frecuencias_normal = [x[0] for x in sorted(list(con.frecuenciasIngles.items()), 
 
 # Se entrega los pares correspondientes de letra cifrada y letra normal
 comprimido = list(zip(frecuencias_normal, frecuencias_texto))
+
+
+
+# frecuencias_texto = [x[0] for x in sorted(list(instancia.informacion()[0].items()), key = orden)]
+# # Frecuencias de una sola letra ordenadas de menor a mayor 
+# frecuencias_normal = [x[0] for x in sorted(list(con.frecuenciasIngles.items()), key = orden)]
+
+
 print(comprimido)
+
+
+
+
+
+
 
 # Por cada tupla se empieza a generar el nuevo abecedario en la variable abecedario_nuevo
 for tupla in comprimido:
