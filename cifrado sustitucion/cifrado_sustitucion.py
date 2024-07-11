@@ -54,7 +54,33 @@ class CifradoSustitucion:
             else:
                 frecuencias[letra] = 0
         self.frecuencias = frecuencias
-        return frecuencias
+
+         # Se definen las frecuencias de 2-grams
+
+        frecuencias_2 = dict(Counter(
+            self.texto[i] + self.texto[i + 1] for i in range(len(self.texto) - 1) 
+            if self.texto[i] in con.abecedario and self.texto[i + 1] in con.abecedario
+            ))
+        
+        largo_2 = sum(frecuencias_2[llave] for llave in list(frecuencias_2.keys()))
+        
+        for llave in list(frecuencias_2.keys()):
+            frecuencias_2[llave] = frecuencias_2[llave] / largo_2
+
+        # Se definen las frecuencias de 3-grams
+
+        frecuencias_3 = dict(Counter(
+            self.texto[i] + self.texto[i + 1] + self.texto[i + 2] for i in range(len(self.texto) - 2) 
+            if self.texto[i] in con.abecedario and self.texto[i + 1] in con.abecedario and self.texto[i + 2] in con.abecedario 
+            ))
+        
+        largo_3 = sum(frecuencias_2[llave] for llave in list(frecuencias_3.keys()))
+
+        for llave in list(frecuencias_3.keys()):
+            frecuencias_3[llave] = frecuencias_3[llave] / largo_3
+
+        # Se retorna una tupla de las frecuencias obtenidas para el analisis...
+        return frecuencias, frecuencias_2, frecuencias_3
     
 
     def decifrar(self, abecedario):
