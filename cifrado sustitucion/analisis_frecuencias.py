@@ -51,8 +51,10 @@ print(abecedario_nuevo)
 
 instancia.decifrar("".join(abecedario_nuevo))
 # lista de todos los posibles bigramas
-bigramas = [x+y for x in "abcdefghijklmnopqrstuvwxyz" for y in "abcdefghijklmnopqrstuvwxyz"]
-
-
-
+alfabeto = 'abcdefghijklmnopqrstuvwxyz'
+bigrama = {}
+for primera_letra in alfabeto:
+    for segunda_letra in alfabeto:
+        letra = primera_letra + segunda_letra
+        bigrama[letra] = 0 
 
