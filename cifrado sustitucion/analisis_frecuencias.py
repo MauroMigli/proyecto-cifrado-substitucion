@@ -50,11 +50,44 @@ for tupla in comprimido:
 print(abecedario_nuevo)
 
 instancia.decifrar("".join(abecedario_nuevo))
-# lista de todos los posibles bigramas
+# lista de todos los posibles bigramas y frecuencias
 alfabeto = 'abcdefghijklmnopqrstuvwxyz'
 bigrama = {}
 for primera_letra in alfabeto:
     for segunda_letra in alfabeto:
         letra = primera_letra + segunda_letra
         bigrama[letra] = 0 
+
+textocifrado =  instancia.texto
+cantidaddebigramas = 0
+for i in range(len(textocifrado)-1):
+    palabra = textocifrado[i]+textocifrado[i+1]
+    if palabra in bigrama:
+        bigrama[palabra] += 1
+        cantidaddebigramas += 1
+for i in bigrama:
+    bigrama[i] = bigrama[i]/cantidaddebigramas
+bigrama = sorted(bigrama.items(), key=lambda kv: kv[1],reverse= True)
+bigrama = bigrama[:11]
+
+#Frecuencia del trigrama en la palabra cifrada
+trigrama = {}
+for primera_letra in alfabeto:
+    for segunda_letra in alfabeto:
+        for tercera_letra in alfabeto:
+            letra = primera_letra + segunda_letra + tercera_letra
+            trigrama[letra] = 0 
+
+
+cantidaddetrigrama = 0
+
+for i in range(len(textocifrado)-2):
+    palabra = textocifrado[i]+textocifrado[i+1] + textocifrado[i+2]
+    if palabra in trigrama:
+        trigrama[palabra] += 1
+        cantidaddetrigrama += 1
+for i in trigrama:
+    trigrama[i] = trigrama[i]/cantidaddebigramas
+trigrama = sorted(trigrama.items(), key=lambda kv: kv[1],reverse= True)
+trigrama = trigrama[:11]
 
