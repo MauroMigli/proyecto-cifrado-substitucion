@@ -69,21 +69,21 @@ iteraciones = 40
 unigramas_escogidos = 0  # 26
 bigramas_escogidos = 0  # 15
 trigramas_escogidos = 0  # 11
-indices_cifrados_1 = list(range(26))
-indices_cifrados_2 = list(range(15))
-indices_cifrados_3 = list(range(11))
+
+desfase_uni = 0
+desfase_bi = 0
+desfase_tri = 0
 
 for i in range(iteraciones):
     if unigramas_escogidos < 26:
         original_1 = comprimido[unigramas_escogidos][0]
-        cifrado_1 = comprimido[indices_cifrados_1[unigramas_escogidos]][1]  # Una letra cifrada
+        cifrado_1 = comprimido[unigramas_escogidos + desfase_uni][1]
 
         if cifrado_1 in abecedario_nuevo:
             if unigramas_escogidos + 1 <= 25:
-                # swap los índices posterior con este
-                temp = indices_cifrados_1[unigramas_escogidos]
-                indices_cifrados_1[unigramas_escogidos] = indices_cifrados_1[unigramas_escogidos + 1]
-                indices_cifrados_1[unigramas_escogidos + 1] = temp
+                print("Conflicto!")
+                # Sumarle uno al desfase del que descartamos
+                # Agregar el que elegimos al diccionario
         else:
             unigramas_escogidos += 1
             for pos, letra in enumerate(abecedario):
@@ -91,48 +91,48 @@ for i in range(iteraciones):
                     abecedario_nuevo[pos] = cifrado_1
                     break
 
-    if bigramas_escogidos < 15:
-        original_2 = comprimido2[bigramas_escogidos][0]
-        cifrado_2 = comprimido2[indices_cifrados_2[bigramas_escogidos]][1]
-        letra1 = cifrado_2[0]
-        letra2 = cifrado_2[1]
-
-        if (letra1 in abecedario_nuevo) or (letra2 in abecedario_nuevo):
-            if bigramas_escogidos + 1 <= 25:
-                temp = indices_cifrados_2[bigramas_escogidos]
-                indices_cifrados_2[bigramas_escogidos] = indices_cifrados_2[bigramas_escogidos + 1]
-                indices_cifrados_2[bigramas_escogidos + 1] = temp
-        else:
-            bigramas_escogidos += 1
-            for pos, letra in enumerate(abecedario):
-                letra1, letra2 = cifrado_2
-                if letra == letra1:
-                    abecedario_nuevo[pos] = letra1
-                if letra == letra2:
-                    abecedario_nuevo[pos] = letra2
-
-    if trigramas_escogidos < 11:
-        original_3 = comprimido3[trigramas_escogidos][0]
-        cifrado_3 = comprimido3[indices_cifrados_3[trigramas_escogidos]][1]
-        letra1 = cifrado_3[0]
-        letra2 = cifrado_3[1]
-        letra3 = cifrado_3[2]
-
-        if (letra1 in abecedario_nuevo) or (letra2 in abecedario_nuevo) or (letra3 in abecedario_nuevo):
-            if trigramas_escogidos + 1 <= 25:
-                temp = indices_cifrados_3[trigramas_escogidos]
-                indices_cifrados_3[trigramas_escogidos] = indices_cifrados_3[trigramas_escogidos + 1]
-                indices_cifrados_3[trigramas_escogidos + 1] = temp
-        else:
-            trigramas_escogidos += 1
-            for pos, letra in enumerate(abecedario):
-                letra1, letra2, letra3 = cifrado_3
-                if letra == letra1:
-                    abecedario_nuevo[pos] = letra1
-                if letra == letra2:
-                    abecedario_nuevo[pos] = letra2
-                if letra == letra3:
-                    abecedario_nuevo[pos] = letra3
+    # if bigramas_escogidos < 15:
+    #     original_2 = comprimido2[bigramas_escogidos][0]
+    #     cifrado_2 = comprimido2[indices_cifrados_2[bigramas_escogidos]][1]
+    #     letra1 = cifrado_2[0]
+    #     letra2 = cifrado_2[1]
+    #
+    #     if (letra1 in abecedario_nuevo) or (letra2 in abecedario_nuevo):
+    #         if bigramas_escogidos + 1 <= 25:
+    #             temp = indices_cifrados_2[bigramas_escogidos]
+    #             indices_cifrados_2[bigramas_escogidos] = indices_cifrados_2[bigramas_escogidos + 1]
+    #             indices_cifrados_2[bigramas_escogidos + 1] = temp
+    #     else:
+    #         bigramas_escogidos += 1
+    #         for pos, letra in enumerate(abecedario):
+    #             letra1, letra2 = cifrado_2
+    #             if letra == letra1:
+    #                 abecedario_nuevo[pos] = letra1
+    #             if letra == letra2:
+    #                 abecedario_nuevo[pos] = letra2
+    #
+    # if trigramas_escogidos < 11:
+    #     original_3 = comprimido3[trigramas_escogidos][0]
+    #     cifrado_3 = comprimido3[indices_cifrados_3[trigramas_escogidos]][1]
+    #     letra1 = cifrado_3[0]
+    #     letra2 = cifrado_3[1]
+    #     letra3 = cifrado_3[2]
+    #
+    #     if (letra1 in abecedario_nuevo) or (letra2 in abecedario_nuevo) or (letra3 in abecedario_nuevo):
+    #         if trigramas_escogidos + 1 <= 25:
+    #             temp = indices_cifrados_3[trigramas_escogidos]
+    #             indices_cifrados_3[trigramas_escogidos] = indices_cifrados_3[trigramas_escogidos + 1]
+    #             indices_cifrados_3[trigramas_escogidos + 1] = temp
+    #     else:
+    #         trigramas_escogidos += 1
+    #         for pos, letra in enumerate(abecedario):
+    #             letra1, letra2, letra3 = cifrado_3
+    #             if letra == letra1:
+    #                 abecedario_nuevo[pos] = letra1
+    #             if letra == letra2:
+    #                 abecedario_nuevo[pos] = letra2
+    #             if letra == letra3:
+    #                 abecedario_nuevo[pos] = letra3
 
 print(abecedario_nuevo)
 instancia.decifrar("".join(abecedario_nuevo))

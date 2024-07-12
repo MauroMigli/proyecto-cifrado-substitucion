@@ -11,7 +11,7 @@ class CifradoSustitucion:
     """
     def __init__(self, ruta):
         # Se lee el archivo...
-        archivo = open(ruta,encoding="utf-8")
+        archivo = open(ruta, encoding="utf-8")
         data = archivo.readlines()
         archivo.close()
 
@@ -96,7 +96,7 @@ class CifradoSustitucion:
             if self.texto[i] in con.abecedario and self.texto[i + 1] in con.abecedario and self.texto[i + 2] in con.abecedario 
             ))
         
-        largo_3 = sum(frecuencias_2[llave] for llave in list(frecuencias_3.keys()))
+        largo_3 = sum(frecuencias_3[llave] for llave in list(frecuencias_3.keys()))
 
         for llave in list(frecuencias_3.keys()):
             frecuencias_3[llave] = frecuencias_3[llave] / largo_3
