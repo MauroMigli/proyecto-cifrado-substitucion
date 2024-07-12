@@ -1,9 +1,10 @@
 """
-Archivo encargado de crear el cifrado 
+Archivo encargado de crear el cifrado
 """
 from collections import Counter
-import random 
-import constantes as con 
+import random
+import constantes as con
+import textwrap
 
 class CifradoSustitucion:
     """
@@ -11,7 +12,7 @@ class CifradoSustitucion:
     """
     def __init__(self, ruta):
         # Se lee el archivo...
-        archivo = open(ruta, encoding="utf-8")
+        archivo = open(ruta,encoding="utf-8")
         data = archivo.readlines()
         archivo.close()
 
@@ -24,28 +25,30 @@ class CifradoSustitucion:
             data[i] = data[i].replace("ó", "o")
             data[i] = data[i].replace("ú", "u")
 
-        # Si es que esta cifrado, entonces pasa a ser True 
+        # Si es que esta cifrado, entonces pasa a ser True
         self.esta_cifrado = False
         # Contenido real del texto
         self.texto_secreto = "".join(data)
-        # Contenido a cifrar del texto 
+        # Contenido a cifrar del texto
         self.texto = "".join(data)
+        # Holi
+        self.textoReemplazado = "".join(data)
 
     def cifrar(self):
         """
-        Metodo encargado del cifrado del texto 
+        Metodo encargado del cifrado del texto
         """
         # Si es que no está cifrado...
         if not self.esta_cifrado:
-            # En cifrado se guardará el texto a cifrar 
+            # En cifrado se guardará el texto a cifrar
             cifrado = ""
             # Indices del abecedario nuevo
             indices = con.indices
             random.shuffle(indices)
-            # Se genera el abecedario nuevo 
+            # Se genera el abecedario nuevo
             self.abecedario_cifrado = {con.abecedario[i]: con.abecedario[indices[i]] for i in range(len(con.abecedario))}
 
-            # Por cada caracter del texto a cifrar 
+            # Por cada caracter del texto a cifrar
             for letra in self.texto:
                 # Si es que pertenece al abecedario...
                 if letra in con.abecedario:
@@ -64,7 +67,7 @@ class CifradoSustitucion:
             print("El texto ya está cifrado...")
 
     def informacion(self):
-        # Frecuencias de una sola letra 
+        # Frecuencias de una sola letra
         frecuencias = dict(Counter(letra for letra in self.texto if letra in con.abecedario))
         largo = 0
         for i in self.texto:
@@ -80,22 +83,22 @@ class CifradoSustitucion:
          # Se definen las frecuencias de 2-grams
 
         frecuencias_2 = dict(Counter(
-            self.texto[i] + self.texto[i + 1] for i in range(len(self.texto) - 1) 
+            self.texto[i] + self.texto[i + 1] for i in range(len(self.texto) - 1)
             if self.texto[i] in con.abecedario and self.texto[i + 1] in con.abecedario
             ))
-        
+
         largo_2 = sum(frecuencias_2[llave] for llave in list(frecuencias_2.keys()))
-        
+
         for llave in list(frecuencias_2.keys()):
             frecuencias_2[llave] = frecuencias_2[llave] / largo_2
 
         # Se definen las frecuencias de 3-grams
 
         frecuencias_3 = dict(Counter(
-            self.texto[i] + self.texto[i + 1] + self.texto[i + 2] for i in range(len(self.texto) - 2) 
-            if self.texto[i] in con.abecedario and self.texto[i + 1] in con.abecedario and self.texto[i + 2] in con.abecedario 
+            self.texto[i] + self.texto[i + 1] + self.texto[i + 2] for i in range(len(self.texto) - 2)
+            if self.texto[i] in con.abecedario and self.texto[i + 1] in con.abecedario and self.texto[i + 2] in con.abecedario
             ))
-        
+
         largo_3 = sum(frecuencias_3[llave] for llave in list(frecuencias_3.keys()))
 
         for llave in list(frecuencias_3.keys()):
@@ -103,7 +106,43 @@ class CifradoSustitucion:
 
         # Se retorna una tupla de las frecuencias obtenidas para el analisis...
         return frecuencias, frecuencias_2, frecuencias_3
-    
+
+    def subrayar(self, letras1, letras2):
+        len_letras1 = len(letras1)
+        len_letras2 = len(letras2)
+        # Falta que reemplace parcialmente también las letras, ahí abajo puse para subrayar en verde las ya cambiadas
+        # Pero no sé si lo dejaremos como con spoiler o sin él
+        texto_final = ""
+        idx = 0
+        while idx < len(self.texto):
+            if self.texto[idx:idx + len_letras1] == letras1:
+                texto_final += f"\033[31m{letras1}\033[m"
+                idx += len_letras1
+            elif self.texto[idx:idx + len_letras2] == letras2:
+                texto_final += f"\033[34m{letras2}\033[m"
+                idx += len_letras2
+            else:
+                texto_final += self.texto[idx]
+                idx += 1
+
+        # for i in range(len(self.texto)):
+        #     substring1 = self.texto[i:i + len_letras1]
+        #     substring2 = self.texto[i:i + len_letras2]
+        #     # if self.texto_secreto[i] == decifrado[i]:
+        #     #     texto_final += f"\033[32m{decifrado[i]}\033[m"
+        #     # El de abajo elif para agregar el de arriba
+        #     if substring1 == letras1 and substring2== letras2:
+        #         texto_final += f"\033[33m{letras1}\033[m"
+        #     elif substring1 == letras1:
+        #         texto_final += f"\033[31m{letras1}\033[m"
+        #     elif substring2 == letras2:
+        #         texto_final += f"\033[34m{letras2}\033[m"
+        #     else:
+        #         texto_final += self.texto[i]
+
+        texto_final = textwrap.fill(texto_final, 120)
+        print(texto_final)
+
 
     def decifrar(self, abecedario):
         # Se decifra el codigo dado el abecedario

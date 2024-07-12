@@ -1,9 +1,27 @@
 import matplotlib.pyplot as plt
 import cifrado_sustitucion as cifrado_1
-import constantes as con 
+import constantes as con
 
 def orden(valor):
     return -1 * valor[1]
+
+def agregar_letras(abecedario, letras_or, letras_cif, abecedario_nuevo, n):
+    if n == 1:
+        for pos, letra in enumerate(abecedario):
+            if letra == letras_or:
+                abecedario_nuevo[pos] = letras_cif
+                break
+    elif n == 2:
+        listas = 0
+        for pos, letra in enumerate(abecedario):
+            if letra == letras_or[0]:
+                abecedario_nuevo[pos] = letras_cif[0]
+                listas += 1
+            if letra == letras_or[1]:
+                abecedario_nuevo[pos] = letras_cif[1]
+                listas += 1
+            if listas == 2:
+                break
 
 
 instancia = cifrado_1.CifradoSustitucion("text.txt")
@@ -30,27 +48,27 @@ instancia.informacion()
 # # Display the plot
 # plt.show()
 
-# Abecedario a generar 
+# Abecedario a generar
 abecedario_nuevo = ["" for _ in range(26)]
 
 # Lista del abecedario
 abecedario = [x for x in "abcdefghijklmnopqrstuvwxyz"]
-# Frecuencias del texto cifrado ordenadas de menor a mayor 
-frecuencias_texto = [x[0] for x in sorted(list(instancia.informacion()[0].items()), key = orden)]
-# Frecuencias de una sola letra ordenadas de menor a mayor 
-frecuencias_normal = [x[0] for x in sorted(list(con.frecuenciasIngles.items()), key = orden)]
+# Frecuencias del texto cifrado ordenadas de menor a mayor
+frecuencias_texto = [x for x in sorted(list(instancia.informacion()[0].items()), key = orden)]
+# Frecuencias de una sola letra ordenadas de menor a mayor
+frecuencias_normal = [x for x in sorted(list(con.frecuenciasIngles.items()), key = orden)]
 
 # Se entrega los pares correspondientes de letra cifrada y letra normal
 comprimido = list(zip(frecuencias_normal, frecuencias_texto))
 
 # frecuencias_texto = [x[0] for x in sorted(list(instancia.informacion()[0].items()), key = orden)]
-# # Frecuencias de una sola letra ordenadas de menor a mayor 
+# # Frecuencias de una sola letra ordenadas de menor a mayor
 # frecuencias_normal = [x[0] for x in sorted(list(con.frecuenciasIngles.items()), key = orden)]
 
 # Frecuencias del texto cifrado ordenadas de menor a mayor
-frecuencias_texto = [x[0] for x in sorted(list(instancia.informacion()[1].items()), key = orden)]
+frecuencias_texto = [x for x in sorted(list(instancia.informacion()[1].items()), key = orden)]
 # Frecuencias de una sola letra ordenadas de menor a mayor
-frecuencias_normal = [x[0] for x in sorted(list(con.frecuencias_2.items()), key = orden)]
+frecuencias_normal = [x for x in sorted(list(con.frecuencias_2.items()), key = orden)]
 
 # Se entrega los pares correspondientes de letra cifrada y letra normal
 comprimido2 = list(zip(frecuencias_normal, frecuencias_texto))
@@ -63,53 +81,156 @@ frecuencias_normal = [x[0] for x in sorted(list(con.frecuencias_3.items()), key 
 # Se entrega los pares correspondientes de letra cifrada y letra normal
 comprimido3 = list(zip(frecuencias_normal, frecuencias_texto))
 
-print(comprimido3)
-
-iteraciones = 40
+iteraciones = 5
 unigramas_escogidos = 0  # 26
 bigramas_escogidos = 0  # 15
 trigramas_escogidos = 0  # 11
+indices_cifrados_1 = list(range(26))
+indices_cifrados_2 = list(range(15))
+indices_cifrados_3 = list(range(11))
+
+letras_elegidas = []
 
 desfase_uni = 0
 desfase_bi = 0
-desfase_tri = 0
+
+auto = False
 
 for i in range(iteraciones):
-    if unigramas_escogidos < 26:
-        original_1 = comprimido[unigramas_escogidos][0]
-        cifrado_1 = comprimido[unigramas_escogidos + desfase_uni][1]
+    if unigramas_escogidos < 26 and unigramas_escogidos + desfase_uni < 26:
+        letra_or, frecuencia_or = comprimido[unigramas_escogidos][0]
+        letra_cif, frecuencia_cif = comprimido[unigramas_escogidos + desfase_uni][1]  # Una letra cifrada
+        repetido = False
 
-        if cifrado_1 in abecedario_nuevo:
-            if unigramas_escogidos + 1 <= 25:
-                print("Conflicto!")
-                # Sumarle uno al desfase del que descartamos
-                # Agregar el que elegimos al diccionario
-        else:
+        for pos, tupla in enumerate(letras_elegidas):
+            letras_repetidas = tupla[0][0]
+            n = len(letras_repetidas)
+            if n == 1:
+                if letras_repetidas == letra_or:  # Se rompe en el último índice ojo
+                    repetido = True
+                    print("Ha habido un conflicto con este unigrama! Elige una de estas dos opciones, revisa primero:")
+                    instancia.subrayar(letra_cif, tupla[1][0])
+                    # instancia.subrayar("".join(abecedario_nuevo), letra_or, letra_repetida)  # Solo ejecutar este si ya agregamos que cambiara parcialmente
+                    print("En verde lo correcto y en amarillo las letras que se comparten")
+                    print(f"Apreta 0 para elegir (rojo) {letra_or} con una frecuencia de {(frecuencia_or * 100):.1f}% en el inglés -> cifrado en {letra_cif} de {(frecuencia_cif * 100):.1f}% en el texto (Puesto {unigramas_escogidos + desfase_uni})")
+                    print(f"Apreta 1 para mantener (azul) {letras_repetidas} con una frecuencia de {(tupla[0][1] * 100):.1f}% en el inglés -> cifrado en {tupla[1][0]} de {(tupla[1][1] * 100):.1f}% en el texto (Puesto {tupla[2]})")
+
+                    eleccion = 1
+                    if not auto:
+                        eleccion = int(input())
+                    else:
+                        maximo = max(frecuencia_cif, tupla[1][1])
+                        if maximo == frecuencia_cif:
+                            eleccion = 0
+                        else:
+                            eleccion = 1
+
+                    if eleccion == 0:
+                        agregar_letras(abecedario, letra_or, letra_cif, abecedario_nuevo, 1)
+                        letras_elegidas[pos] = ((letra_or, frecuencia_or), (letra_cif, frecuencia_cif), unigramas_escogidos + desfase_uni)
+                        unigramas_escogidos += 1
+                    else:
+                        desfase_uni += 1
+            elif n == 2:
+                letra_repetida_1, letra_repetida_2 = tupla[0][0]
+                if (letra_repetida_1 == letra_or) or (letra_repetida_2 == letra_or):
+                    repetido = True
+                    print("Ha habido un conflicto con este bigrama! Elige una de estas dos opciones, revisa primero:")
+                    instancia.subrayar(letra_cif, tupla[1][0])
+                    # instancia.subrayar("".join(abecedario_nuevo), letra_or, letras_cif)  # Solo ejecutar este si ya agregamos que cambiara parcialmente
+                    print("En verde lo correcto y en amarillo las letras que se comparten")
+                    print(f"Apreta 0 para elegir (rojo) {letra_or} con una frecuencia de {(frecuencia_or * 100):.1f}% en el inglés -> cifrado en {letra_cif} de {(frecuencia_cif * 100):.1f}% en el texto (Puesto {unigramas_escogidos + desfase_uni})")
+                    print(f"Apreta 1 para mantener (azul) {tupla[0][0]} con una frecuencia de {(tupla[0][1] * 100):.1f}% en el inglés -> cifrado en {tupla[1][0]} de {(tupla[1][1] * 100):.1f}% en el texto (Puesto {tupla[2]})")
+
+                    eleccion = 1
+                    if not auto:
+                        eleccion = int(input())
+                    else:
+                        maximo = max(frecuencia_cif, tupla[1][1])
+                        if maximo == frecuencia_cif:
+                            eleccion = 0
+                        else:
+                            eleccion = 1
+
+                    if eleccion == 0:
+                        agregar_letras(abecedario, letra_or, letra_cif, abecedario_nuevo, 1)
+                        letras_elegidas[pos] = ((letra_or, frecuencia_or), (letra_cif, frecuencia_cif), unigramas_escogidos + desfase_uni)
+                        unigramas_escogidos += 1
+                    else:
+                        desfase_uni += 1
+            continue
+        if not repetido:
+            agregar_letras(abecedario, letra_or, letra_cif, abecedario_nuevo, 1)
+            letras_elegidas.append(((letra_or, frecuencia_or), (letra_cif, frecuencia_cif), unigramas_escogidos + desfase_uni))
             unigramas_escogidos += 1
-            for pos, letra in enumerate(abecedario):
-                if letra == original_1:
-                    abecedario_nuevo[pos] = cifrado_1
-                    break
 
-    # if bigramas_escogidos < 15:
-    #     original_2 = comprimido2[bigramas_escogidos][0]
-    #     cifrado_2 = comprimido2[indices_cifrados_2[bigramas_escogidos]][1]
-    #     letra1 = cifrado_2[0]
-    #     letra2 = cifrado_2[1]
-    #
-    #     if (letra1 in abecedario_nuevo) or (letra2 in abecedario_nuevo):
-    #         if bigramas_escogidos + 1 <= 25:
-    #             temp = indices_cifrados_2[bigramas_escogidos]
-    #             indices_cifrados_2[bigramas_escogidos] = indices_cifrados_2[bigramas_escogidos + 1]
-    #             indices_cifrados_2[bigramas_escogidos + 1] = temp
-    #     else:
-    #         bigramas_escogidos += 1
-    #         for pos, letra in enumerate(abecedario):
-    #             letra1, letra2 = cifrado_2
-    #             if letra == letra1:
-    #                 abecedario_nuevo[pos] = letra1
-    #             if letra == letra2:
-    #                 abecedario_nuevo[pos] = letra2
+    if bigramas_escogidos < 15 and bigramas_escogidos + desfase_bi < 15:
+        letras_or, frecuencia_or = comprimido2[bigramas_escogidos][0]
+        letras_cif, frecuencia_cif = comprimido2[bigramas_escogidos + desfase_bi][1]  # Dos letras cifradas
+        repetido = False
+
+        for pos, tupla in enumerate(letras_elegidas):
+            letras_repetidas = tupla[0][0]
+            n = len(letras_repetidas)
+            if n == 1:
+                if letras_repetidas in letras_or:  # Se rompe en el último índice ojo
+                    repetido = True
+                    print("Ha habido un conflicto con este bigrama! Elige una de estas dos opciones, revisa primero:")
+                    instancia.subrayar(letras_cif, tupla[1][0])
+                    # instancia.subrayar("".join(abecedario_nuevo), letra_or, letra_repetida)  # Solo ejecutar este si ya agregamos que cambiara parcialmente
+                    print("En verde lo correcto y en amarillo las letras que se comparten")
+                    print(f"Apreta 0 para elegir (rojo) {letras_or} con una frecuencia de {(frecuencia_or * 100):.1f}% en el inglés -> cifrado en {letras_cif} de {(frecuencia_cif * 100):.1f}% en el texto (Puesto {bigramas_escogidos + desfase_bi})")
+                    print(f"Apreta 1 para mantener (azul) {letras_repetidas} con una frecuencia de {(tupla[0][1] * 100):.1f}% en el inglés -> cifrado en {tupla[1][0]} de {(tupla[1][1] * 100):.1f}% en el texto (Puesto {tupla[2]})")
+
+                    eleccion = 1
+                    if not auto:
+                        eleccion = int(input())
+                    else:
+                        maximo = max(frecuencia_cif, tupla[1][1])
+                        if maximo == frecuencia_cif:
+                            eleccion = 0
+                        else:
+                            eleccion = 1
+
+                    if eleccion == 0:
+                        agregar_letras(abecedario, letras_or, letras_cif, abecedario_nuevo, 2)
+                        letras_elegidas[pos] = ((letras_or, frecuencia_or), (letras_cif, frecuencia_cif), bigramas_escogidos + desfase_bi)
+                        bigramas_escogidos += 1
+                    else:
+                        desfase_bi += 1
+            elif n == 2:
+                letra_repetida_1, letra_repetida_2 = tupla[0][0]
+                if (letra_repetida_1 in letras_or) or (letra_repetida_2 in letras_or):
+                    repetido = True
+                    print("Ha habido un conflicto con este bigrama! Elige una de estas dos opciones, revisa primero:")
+                    instancia.subrayar(letras_cif, tupla[1][0])
+                    # instancia.subrayar("".join(abecedario_nuevo), letras_or, letras_cif)  # Solo ejecutar este si ya agregamos que cambiara parcialmente
+                    print("En verde lo correcto y en amarillo las letras que se comparten")
+                    print(f"Apreta 0 para elegir (rojo) {letras_or} con una frecuencia de {(frecuencia_or * 100):.1f}% en el inglés -> cifrado en {letras_cif} de {(frecuencia_cif * 100):.1f}% en el texto (Puesto {bigramas_escogidos + desfase_bi})")
+                    print(f"Apreta 1 para mantener (azul) {tupla[0][0]} con una frecuencia de {(tupla[0][1] * 100):.1f}% en el inglés -> cifrado en {tupla[1][0]} de {(tupla[1][1] * 100):.1f}% en el texto (Puesto {tupla[2]})")
+
+                    eleccion = 1
+                    if not auto:
+                        eleccion = int(input())
+                    else:
+                        maximo = max(frecuencia_cif, tupla[1][1])
+                        if maximo == frecuencia_cif:
+                            eleccion = 0
+                        else:
+                            eleccion = 1
+
+                    if eleccion == 0:
+                        agregar_letras(abecedario, letras_or, letras_cif, abecedario_nuevo, 2)
+                        letras_elegidas[pos] = ((letras_or, frecuencia_or), (letras_cif, frecuencia_cif), bigramas_escogidos + desfase_bi)
+                        bigramas_escogidos += 1
+                    else:
+                        desfase_bi += 1
+            continue
+        if not repetido:
+            agregar_letras(abecedario, letras_or, letras_cif, abecedario_nuevo, 2)
+            letras_elegidas.append(((letras_or, frecuencia_or), (letras_cif, frecuencia_cif), bigramas_escogidos + desfase_bi))
+            bigramas_escogidos += 1
+
     #
     # if trigramas_escogidos < 11:
     #     original_3 = comprimido3[trigramas_escogidos][0]
